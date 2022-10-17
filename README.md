@@ -1,6 +1,6 @@
 # ALLOSAUR
 
-ALLOSAUR is a pairing-based accumulator with good anonymity properties. This is a proof-of-concept implementation of the single-server functionality of ALLOSAUR and a multi-server threshold update process.
+[ALLOSAUR](https://eprint.iacr.org/2022/1362/) is a pairing-based accumulator with good anonymity properties. This is a proof-of-concept implementation of the single-server functionality of ALLOSAUR and a multi-server threshold update process.
 
 ## Current Features
 
