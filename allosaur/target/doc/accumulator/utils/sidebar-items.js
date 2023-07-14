@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["SALT"],"fn":["dad","generate_fr","hash_to_g1"],"struct":["Polynomial","PolynomialG1"]};

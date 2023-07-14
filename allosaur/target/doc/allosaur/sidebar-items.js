@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["SECURITY"],"fn":["shamir_ceofficients","shamir_rebuild_point","shamir_rebuild_scalar","shamir_share"],"struct":["AccParams","MembershipProof","PublicKeys","Server","User","Witness"],"type":["UserID"]};
