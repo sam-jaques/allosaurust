@@ -148,7 +148,13 @@ impl Server {
             (user_pub_key + params.get_k0()) * ((y.0 + self.sign_secret_key.0).invert().unwrap());
         Some((acc_witness, signature))
     }
-
+    pub fn register_user(&mut self, params: &AccParams, y: UserID, witu: (&Element, &Element, &G1Projective))  -> Option<(MembershipWitness, G1Projective, usize, Accumulator)> {
+        self.add(y);
+        let (acc_witness, signature) = self.wit(params, y, witu.0,witu.1,witu.2);
+        let epoch = self.get_epoch();
+        let acc = self.get_accumulator;
+        Some((acc_witness, signature, epoch, acc))
+    }
     // Given shares from a user, returns the array of (d,W) which can each be used as 
     // C <- (C - W)*(1/d) 
     // for an update

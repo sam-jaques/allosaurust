@@ -77,6 +77,10 @@ impl User {
     pub fn get_id(&self) -> UserID {
         self.id
     }
+    // First local part of creating a new witness for the user
+    // The user generates a random new secret key, 
+    // creates a ZKPoK of this key, and asks the server given
+    // as an argument for a new witness and long-term signature
     pub fn wit_u(&mut self, params: &AccParams) -> (Element, Scalar, G1Projective, SecretKey) {
         // If this is deterministic this line needs to be changed
         let secret_key = SecretKey::new(Some(b"USER_KEY"));
@@ -91,11 +95,20 @@ impl User {
         let response = k.0 - challenge.0 * secret_key.0;
 	(challenge, response, user_pub_key, secret_key) 
     }
+    // reg_response: witness, signature, epoch, accumulator
+    pub fn set_wit(&mut self,secret_key, reg_response) {
+        Some(reg_response) => {
+        self.witness = Some(Witness {
+            secret_key: key,
+            witness: reg_response.0,
+            signature: reg_response.1,
+        });
+        self.epoch = reg_response.2;
+        self.accumulator = reg_response.3;
+        }
+        None => {}
+    }
     // For local benchmarking, needs server object!
-    // Creates a new witness for the user
-    // The user generates a random new secret key, 
-    // creates a ZKPoK of this key, and asks the server given
-    // as an argument for a new witness and long-term signature
     pub fn wit(&mut self, params: &AccParams, server: &Server) {
         let (challenge, response, user_pub_key, key) = self.wit_u(params);
         // Send Schnorr proof and ID to server
