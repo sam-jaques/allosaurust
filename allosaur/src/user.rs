@@ -96,18 +96,17 @@ impl User {
 	(challenge, response, user_pub_key, secret_key) 
     }
     // reg_response: witness, signature, epoch, accumulator
-    pub fn set_wit(&mut self,secret_key, reg_response) {
-        Some(reg_response) => {
+    pub fn set_wit(&mut self, secret_key: SecretKey, reg_response: (MembershipWitness, G1Projective, usize, Accumulator)) {
         self.witness = Some(Witness {
-            secret_key: key,
+            secret_key: secret_key,
             witness: reg_response.0,
             signature: reg_response.1,
         });
         self.epoch = reg_response.2;
         self.accumulator = reg_response.3;
         }
-        None => {}
-    }
+
+    
     // For local benchmarking, needs server object!
     pub fn wit(&mut self, params: &AccParams, server: &Server) {
         let (challenge, response, user_pub_key, key) = self.wit_u(params);

@@ -9,9 +9,9 @@
             "name": "Debug executable",
             "cargo": {
                 "args": [
-                    "build",
+                    "rustc",
                     "--package=allosaur",
-                    "--manifest-path=Cargo.toml"
+                    "--manifest-path=Cargo.toml",
                 ],
                 "filter": {
                     "kind": "bin"
