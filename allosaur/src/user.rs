@@ -111,18 +111,24 @@ impl User {
     pub fn wit(&mut self, params: &AccParams, server: &Server) {
         let (challenge, response, user_pub_key, key) = self.wit_u(params);
         // Send Schnorr proof and ID to server
-        match server.wit(params, &self.id, &challenge, &Element(response), &user_pub_key) {
-            Some(wits) => {
-                self.witness = Some(Witness {
-                    secret_key: key,
-                    witness: wits.0,
-                    signature: wits.1,
-                });
-                self.epoch = server.get_epoch();
-                self.accumulator = server.get_accumulator();
-            }
+        match server.register_user_no_id(params, (&challenge, &Element(response), &user_pub_key)) {
+            Some(reg_response) => {
+                self.set_wit(key, reg_response);
+            }   
             None => {}
         }
+  //      match server.wit(params, &self.id, &challenge, &Element(response), &user_pub_key) {
+    //        Some(wits) => {
+      //          self.witness = Some(Witness {
+        //            secret_key: key,
+          //         witness: wits.0,
+           //         signature: wits.1,
+            //    });
+              //  self.epoch = server.get_epoch();
+                //self.accumulator = server.get_accumulator();
+            //}
+       //     None => {}
+       // }
     }
     
 
@@ -252,6 +258,7 @@ impl User {
         Ok(new_witness)
     }
 
+    // TODO implement without server object dependency 
     // Updates to the latest available epoch, from a set of servers
     pub fn update(&mut self, servers: &[Server], threshold: usize) -> Result<(), &'static str> {
         
