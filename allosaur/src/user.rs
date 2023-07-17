@@ -77,15 +77,10 @@ impl User {
     pub fn get_id(&self) -> UserID {
         self.id
     }
-
-    // Creates a new witness for the user
-    // The user generates a random new secret key, 
-    // creates a ZKPoK of this key, and asks the server given
-    // as an argument for a new witness and long-term signature
-    pub fn wit(&mut self, params: &AccParams, server: &Server) {
+    pub fn wit_u(&mut self, params: &AccParams) -> (Element, Scalar, G1Projective, SecretKey) {
         // If this is deterministic this line needs to be changed
-        let key = SecretKey::new(Some(b"USER_KEY"));
-        let user_pub_key = params.get_k1() * key.0;
+        let secret_key = SecretKey::new(Some(b"USER_KEY"));
+        let user_pub_key = params.get_k1() * secret_key.0;
         // Create a Schnorr proof
         let k = Element::random();
         let k_point = params.get_k1() * k.0;
@@ -93,7 +88,16 @@ impl User {
         transcript.append_message(b"user_pub_key", user_pub_key.to_bytes().as_ref());
         transcript.append_message(b"commitment", k_point.to_bytes().as_ref());
         let challenge = Element::from_transcript(b"challenge", &mut transcript);
-        let response = k.0 - challenge.0 * key.0;
+        let response = k.0 - challenge.0 * secret_key.0;
+	(challenge, response, user_pub_key, secret_key) 
+    }
+    // For local benchmarking, needs server object!
+    // Creates a new witness for the user
+    // The user generates a random new secret key, 
+    // creates a ZKPoK of this key, and asks the server given
+    // as an argument for a new witness and long-term signature
+    pub fn wit(&mut self, params: &AccParams, server: &Server) {
+        let (challenge, response, user_pub_key, key) = self.wit_u(params);
         // Send Schnorr proof and ID to server
         match server.wit(params, &self.id, &challenge, &Element(response), &user_pub_key) {
             Some(wits) => {
@@ -108,6 +112,7 @@ impl User {
             None => {}
         }
     }
+    
 
     // Prepares the secret shares that will be sent to each server
     // during the ALLOSAUR update
