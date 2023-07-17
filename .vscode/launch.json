@@ -10,8 +10,7 @@
             "cargo": {
                 "args": [
                     "build",
-                    "--bin=hello_remote_world",
-                    "--package=hello_remote_world",
+                    "--package=allosaur",
                     "--manifest-path=Cargo.toml"
                 ],
                 "filter": {
