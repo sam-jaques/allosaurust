@@ -108,7 +108,7 @@ impl User {
 
     
     // For local benchmarking, needs server object!
-    pub fn wit(&mut self, params: &AccParams, server: &Server) {
+    pub fn wit(&mut self, params: &AccParams, server:  &mut Server) {
         let (challenge, response, user_pub_key, key) = self.wit_u(params);
         // Send Schnorr proof and ID to server
         match server.register_user_no_id(params, (&challenge, &Element(response), &user_pub_key)) {

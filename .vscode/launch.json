@@ -1,23 +1,40 @@
-
 {
     "version": "0.2.0",
     "configurations": [
-        
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug executable",
+            "name": "Build",
             "cargo": {
                 "args": [
                     "rustc",
                     "--package=allosaur",
-                    "--manifest-path=Cargo.toml",
+                    "--manifest-path=Cargo.toml"
                 ],
                 "filter": {
                     "kind": "bin"
                 }
             },
             "args": []
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug benches",
+            "cargo": {
+                "args": [
+                    "bench"
+                ],
+                "filter": {
+                    "name": "allosaur",
+                    "kind": "bin"
+                }
+            },
+            "args": [
+                // "user_arg1",
+                // "user_arg2"
+            ],
+            "cwd": "${workspaceFolder}"
         }
     ]
 }
