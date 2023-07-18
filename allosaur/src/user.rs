@@ -304,7 +304,7 @@ impl User {
      // Updates to the latest available epoch, from a set of servers
      /// * `new_epoch` - Epoch must have been requested from server previously
      /// * `num_servers` - Must be clear from system setup TODO clarify
-     pub fn update_u(&mut self, new_epoch: usize, threshold: usize) -> Result<(), &'static str> {
+     pub fn update_u(&mut self, new_epoch: usize, num_servers: usize, threshold: usize) -> Result<(), &'static str> {
         
         if self.witness.is_none() {
             return Err("No witness");
@@ -319,7 +319,7 @@ impl User {
         // Precompute shares
         let d:usize;
         let y_shares: Vec<Vec<Scalar>>;
-        let y_values: Vec<Scalar>;.
+        let y_values: Vec<Scalar>;
         match self.pre_update(new_epoch, num_servers, threshold){
             Ok(res) => {
                 d = res.0;
@@ -328,7 +328,7 @@ impl User {
             }, Err(e) => {return Err(e);}
         }
         // Get answer from each server (directly)
-       let dvs: Vec<(Vec<Scalar>, Vec<G1Projective>)> = (0..servers.len())
+       let dvs: Vec<(Vec<Scalar>, Vec<G1Projective>)> = (0..num_servers)
             .map(|i| servers[i].update(d, &y_shares[i]))
             .collect();
 
