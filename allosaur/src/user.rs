@@ -301,49 +301,7 @@ impl User {
         }
     }
      
-     // Updates to the latest available epoch, from a set of servers
-     /// * `new_epoch` - Epoch must have been requested from server previously
-     /// * `num_servers` - Must be clear from system setup TODO clarify
-     pub fn update_u(&mut self, new_epoch: usize, num_servers: usize, threshold: usize) -> Result<(), &'static str> {
-        
-        if self.witness.is_none() {
-            return Err("No witness");
-        }
-        // // Check that current witness is valid
-        // let acc = server.get_accumulator();
-        // if !ver(self.accumulator, self.wit_public_key, self.sign_public_key, params, self.id, self.witness){
-        //     return;
-        // }
-        // If so, attempt update
-        
-        // Precompute shares
-        let d:usize;
-        let y_shares: Vec<Vec<Scalar>>;
-        let y_values: Vec<Scalar>;
-        match self.pre_update(new_epoch, num_servers, threshold){
-            Ok(res) => {
-                d = res.0;
-                y_shares = res.1;
-                y_values = res.2;
-            }, Err(e) => {return Err(e);}
-        }
-        // Get answer from each server (directly)
-       let dvs: Vec<(Vec<Scalar>, Vec<G1Projective>)> = (0..num_servers)
-            .map(|i| servers[i].update(d, &y_shares[i]))
-            .collect();
-
-        // Post-processes the update and returns the witness
-        match self.post_update(self.witness.as_ref().unwrap().witness, threshold, &y_shares, &y_values, &dvs) {
-            Ok(new_witness) => {
-                self.witness
-                    .as_mut()
-                    .map(|w| w.update_witness(new_witness));
-
-                self.accumulator = servers[0].get_accumulator();
-                return Ok(());
-            }, Err(e) => {return Err(e);}
-        }
-    }
+     
     // Constructs a membership proof as a byte string
     pub fn make_membership_proof(
         &self,

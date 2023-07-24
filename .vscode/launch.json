@@ -20,20 +20,19 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug benches",
+            "name": "Debug benchmark 'updates'",
             "cargo": {
                 "args": [
-                    "bench"
+                    "test",
+                    "--no-run",
+                    "--bench=updates",
                 ],
                 "filter": {
-                    "name": "allosaur",
-                    "kind": "bin"
+                    "name": "updates",
+                    "kind": "bench"
                 }
             },
-            "args": [
-                // "user_arg1",
-                // "user_arg2"
-            ],
+            "args": [],
             "cwd": "${workspaceFolder}"
         }
     ]
