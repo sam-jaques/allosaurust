@@ -210,7 +210,7 @@ impl User {
             // Through all shares, just rebuild 
             match shamir_rebuild_scalar(shares_of_d_chunk, &coefficients, &check_coefficients) {
                 Some(d_chunk) => {
-                    if d_chunk.is_zero() {
+                    if d_chunk.is_zero().into() {
                         return Err("user has been deleted");
                     } // user was deleted!
                     d_test *= d_chunk;
